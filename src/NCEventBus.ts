@@ -334,6 +334,8 @@ export class NCEventBus {
         return this.emit('notice.group_decrease.kick', json)
       case 'kick_me':
         return this.emit('notice.group_decrease.kick_me', json)
+      case 'disband':
+        return this.emit('notice.group_decrease.disband', json)
       default:
         logger.warn(
           '[node-napcat-ts]',
