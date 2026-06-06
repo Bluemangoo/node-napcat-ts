@@ -189,6 +189,7 @@ export type PrivateFriendMessage = {
   message_id: number
   message_seq: number
   real_id: number
+  real_seq?: string
   message_type: 'private'
   sender: {
     user_id: number
@@ -199,6 +200,9 @@ export type PrivateFriendMessage = {
   font: number
   sub_type: 'friend'
   post_type: 'message'
+  temp_source?: number
+  message_sent_type?: string
+  target_id?: number
   quick_action: (reply: SendMessageSegment[]) => Promise<null>
 } & MessageType
 
@@ -209,6 +213,7 @@ export type PrivateGroupMessage = {
   message_id: number
   message_seq: number
   real_id: number
+  real_seq?: string
   message_type: 'private'
   sender: {
     user_id: number
@@ -219,6 +224,9 @@ export type PrivateGroupMessage = {
   font: number
   sub_type: 'group'
   post_type: 'message'
+  temp_source?: number
+  message_sent_type?: string
+  target_id?: number
   quick_action: (reply: SendMessageSegment[], at_sender?: boolean) => Promise<null>
 } & MessageType
 
@@ -230,6 +238,7 @@ export type GroupMessage = {
   message_id: number
   message_seq: number
   real_id: number
+  real_seq?: string
   message_type: 'group'
   sender: {
     user_id: number
@@ -242,6 +251,10 @@ export type GroupMessage = {
   sub_type: 'normal'
   post_type: 'message'
   group_id: number
+  group_name?: string
+  temp_source?: number
+  message_sent_type?: string
+  target_id?: number
   quick_action: (reply: SendMessageSegment[], at_sender?: boolean) => Promise<null>
 } & MessageType
 
@@ -265,6 +278,7 @@ export type PrivateFriendMessageSelf = {
   message_id: number
   message_seq: number
   real_id: number
+  real_seq?: string
   message_type: 'private'
   sender: {
     user_id: number
@@ -275,6 +289,9 @@ export type PrivateFriendMessageSelf = {
   font: number
   sub_type: 'friend'
   post_type: 'message_sent'
+  temp_source?: number
+  message_sent_type?: string
+  target_id?: number
 } & MessageType
 
 export type PrivateGroupMessageSelf = {
@@ -284,6 +301,7 @@ export type PrivateGroupMessageSelf = {
   message_id: number
   message_seq: number
   real_id: number
+  real_seq?: string
   message_type: 'private'
   sender: {
     user_id: number
@@ -294,6 +312,9 @@ export type PrivateGroupMessageSelf = {
   font: number
   sub_type: 'group'
   post_type: 'message_sent'
+  temp_source?: number
+  message_sent_type?: string
+  target_id?: number
 } & MessageType
 
 export type GroupMessageSelf = {
@@ -303,6 +324,7 @@ export type GroupMessageSelf = {
   message_id: number
   message_seq: number
   real_id: number
+  real_seq?: string
   message_type: 'group'
   sender: {
     user_id: number
@@ -315,6 +337,10 @@ export type GroupMessageSelf = {
   sub_type: 'normal'
   post_type: 'message_sent'
   group_id: number
+  group_name?: string
+  temp_source?: number
+  message_sent_type?: string
+  target_id?: number
 } & MessageType
 
 export interface MessageSentHandler {
@@ -665,6 +691,38 @@ export interface NotifyProfileLike {
   sub_type: 'profile_like'
   operator_id: number
   operator_nick: string
+  times: number
+}
+
+export interface NotifyGrayTip {
+  time: number
+  self_id: number
+  post_type: 'notice'
+  notice_type: 'notify'
+  sub_type: 'gray_tip'
+  group_id: number
+  user_id: number
+  message_id: number
+  busi_id: string
+  content: string
+}
+
+export interface OnlineFileReceive {
+  time: number
+  self_id: number
+  post_type: 'notice'
+  notice_type: 'online_file_receive'
+  sub_type: 'cancel'
+  peer_id: number
+}
+
+export interface OnlineFileSend {
+  time: number
+  self_id: number
+  post_type: 'notice'
+  notice_type: 'online_file_send'
+  sub_type: 'receive' | 'refuse'
+  peer_id: number
 }
 
 export interface NoticeHandler {
@@ -705,6 +763,7 @@ export interface NoticeHandler {
     | NoticeHandler['notice.notify.poke.friend']
     | NoticeHandler['notice.notify.poke.group']
     | NoticeHandler['notice.notify.profile_like']
+    | NoticeHandler['notice.notify.gray_tip']
   'notice.notify.group_name': NotifyGroupName
   'notice.notify.title': NotifyTitle
   'notice.notify.input_status':
@@ -718,9 +777,12 @@ export interface NoticeHandler {
   'notice.notify.poke.friend': NotifyPokeFriend
   'notice.notify.poke.group': NotifyPokeGroup
   'notice.notify.profile_like': NotifyProfileLike
+  'notice.notify.gray_tip': NotifyGrayTip
   'notice.group_recall': GroupRecall
   'notice.group_upload': GroupUpload
   'notice.group_msg_emoji_like': GroupMsgEmojiLike
+  'notice.online_file_receive': OnlineFileReceive
+  'notice.online_file_send': OnlineFileSend
   notice:
     | NoticeHandler['notice.bot_offline']
     | NoticeHandler['notice.friend_add']
@@ -735,6 +797,8 @@ export interface NoticeHandler {
     | NoticeHandler['notice.group_recall']
     | NoticeHandler['notice.group_upload']
     | NoticeHandler['notice.group_msg_emoji_like']
+    | NoticeHandler['notice.online_file_receive']
+    | NoticeHandler['notice.online_file_send']
 }
 
 // =====================================================================================
@@ -808,7 +872,7 @@ export type WSSendParam = {
   can_send_record: {}
   get_status: {}
   get_version_info: {}
-  // set_restart: { delay?: number }
+  set_restart: { delay?: number }
   clean_cache: {}
   bot_exit: {}
 
@@ -1056,6 +1120,68 @@ export type WSSendParam = {
     set?: boolean
   }
   del_group_album_media: { group_id: string; album_id: string; lloc: string }
+
+  // stream
+  clean_stream_temp_file: {}
+  upload_file_stream: {
+    stream_id: string
+    chunk_data?: string
+    chunk_index?: number
+    total_chunks?: number
+    file?: string
+    file_id?: string
+    name?: string
+    chunk_size?: number
+  }
+  download_file_stream: { file?: string; file_id?: string; chunk_size?: number }
+  download_file_record_stream: { file?: string; file_id?: string; chunk_size?: number; out_format?: string }
+  download_file_image_stream: { file?: string; file_id?: string; chunk_size?: number }
+
+  // flash file transfer
+  create_flash_task: { files: string | string[]; name?: string; thumb_path?: string }
+  send_flash_msg: { fileset_id: string; user_id?: number; group_id?: number }
+  get_share_link: { fileset_id: string }
+  download_fileset: { fileset_id: string }
+  get_fileset_info: { fileset_id: string }
+  get_flash_file_list: { fileset_id: string }
+  get_flash_file_url: { fileset_id: string; file_name?: string; file_index?: number }
+  get_fileset_id: { share_code: string }
+
+  // online file
+  send_online_file: { user_id: number; file_path: string; file_name?: string }
+  send_online_folder: { user_id: number; folder_path: string; folder_name?: string }
+  get_online_file_msg: { user_id: string }
+  receive_online_file: { user_id: number; msg_id: string; element_id: string }
+  refuse_online_file: { user_id: number; msg_id: string; element_id: string }
+  cancel_online_file: { user_id: number; msg_id: string }
+
+  // custom face
+  fetch_custom_face_detail: { count?: number | string }
+  add_custom_face: { file: string; emoji_id?: string; package_id?: string }
+  delete_custom_face: { res_id?: string; id?: string; ids?: string; md5?: string }
+  set_custom_face_desc: { emoji_id: string; res_id: string; md5: string; desc: string }
+  get_emoji_likes: { group_id?: number; message_id: number; emoji_id: string; emoji_type?: string; count?: number }
+
+  // go-cqhttp stubs
+  _set_model_show: { model: string; model_show: string }
+  get_online_clients: {}
+  check_url_safely: { url: string }
+  '.get_word_slices': { content: string }
+  '.ocr_image': { image: string }
+
+  // guild
+  get_guild_list: {}
+  get_guild_service_profile: { guild_id: number }
+
+  // other napcat extensions
+  send_group_ark_share: { group_id: string }
+  send_ark_share: { user_id?: string; group_id?: string; phone_number?: string }
+  fetch_ptt_text: { message_id: number | string }
+  send_group_sign: { group_id: string }
+  complete_group_todo: { group_id: string } & ({ message_seq: string } | { message_id: string })
+  cancel_group_todo: { group_id: string } & ({ message_seq: string } | { message_id: string })
+  cancel_group_album_media_like: { group_id: string; album_id: string; batch_id: string; lloc?: string }
+  get_group_signed_list: { group_id: number | string }
 }
 
 type Buffer<T = number> = { [key: string]: T }
@@ -1319,7 +1445,7 @@ export type WSSendReturn = {
     protocol_version: 'v11'
     app_version: string
   }
-  // set_restart: null
+  set_restart: null
   clean_cache: null
   bot_exit: null
 
@@ -2097,4 +2223,109 @@ export type WSSendReturn = {
   do_group_album_comment: null
   set_group_album_media_like: null
   del_group_album_media: null
+
+  // stream
+  clean_stream_temp_file: null
+  upload_file_stream: {
+    stream_id: string
+    result: string
+    total_chunks: number
+    file_id?: string
+    url?: string
+  }
+  download_file_stream: {
+    stream_id: string
+    chunk_data: string
+    chunk_index: number
+    total_chunks: number
+    file_id: string
+    file_name: string
+    file_size: number
+  }
+  download_file_record_stream: WSSendReturn['download_file_stream']
+  download_file_image_stream: WSSendReturn['download_file_stream']
+
+  // flash file transfer
+  create_flash_task: { task_id: string; fileset_id: string }
+  send_flash_msg: { message_id: number }
+  get_share_link: { url: string }
+  download_fileset: { file: string }
+  get_fileset_info: {
+    fileset_id: string
+    file_name: string
+    file_size: number
+    file_count: number
+  }
+  get_flash_file_list: {
+    files: { file_name: string; file_size: number; file_index: number }[]
+  }
+  get_flash_file_url: { url: string }
+  get_fileset_id: { fileset_id: string }
+
+  // online file
+  send_online_file: null
+  send_online_folder: null
+  get_online_file_msg: {
+    msg_id: string
+    element_id: string
+    file_name: string
+    file_size: string
+    is_dir: boolean
+    user_id: number
+  }[]
+  receive_online_file: null
+  refuse_online_file: null
+  cancel_online_file: null
+
+  // custom face
+  fetch_custom_face_detail: {
+    emoji_id: string
+    res_id: string
+    md5: string
+    desc: string
+    url: string
+  }[]
+  add_custom_face: { result: 0; errMsg: string }
+  delete_custom_face: { result: 0; errMsg: string }
+  set_custom_face_desc: { result: 0; errMsg: string }
+  get_emoji_likes: {
+    emoji_like_list: {
+      tinyId: string
+      nickName: string
+      headUrl: string
+    }[]
+    cookie: string
+    is_last_page: boolean
+  }
+
+  // go-cqhttp stubs
+  _set_model_show: null
+  get_online_clients: {
+    client_id: number
+    app_id: number
+    device_name: string
+    device_kind: string
+  }[]
+  check_url_safely: { level: number }
+  '.get_word_slices': { slices: string[] }
+  '.ocr_image': WSSendReturn['ocr_image']
+
+  // guild
+  get_guild_list: { guild_id: string; guild_name: string }[]
+  get_guild_service_profile: { guild_id: string; service_profile: string }
+
+  // other napcat extensions
+  send_group_ark_share: string
+  send_ark_share: { arkJson: string }
+  fetch_ptt_text: { text: string }
+  send_group_sign: null
+  complete_group_todo: null
+  cancel_group_todo: null
+  cancel_group_album_media_like: null
+  get_group_signed_list: {
+    user_id: number
+    nick: string
+    time: number
+    rank: number
+  }[]
 }

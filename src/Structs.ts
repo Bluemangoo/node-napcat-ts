@@ -144,6 +144,43 @@ export interface Receive {
       content: string
     }
   }
+  xml: {
+    type: 'xml'
+    data: {
+      data: string
+    }
+  }
+  location: {
+    type: 'location'
+    data: {
+      lat: string | number
+      lon: string | number
+      title?: string
+      content?: string
+    }
+  }
+  miniapp: {
+    type: 'miniapp'
+    data: {
+      data: string
+    }
+  }
+  onlinefile: {
+    type: 'onlinefile'
+    data: {
+      msgId: string
+      elementId: string
+      fileName: string
+      fileSize: string
+      isDir: boolean
+    }
+  }
+  flashtransfer: {
+    type: 'flashtransfer'
+    data: {
+      fileSetId: string
+    }
+  }
 }
 
 // 泛型基类，包含通用的 type 和 data 字段
@@ -157,7 +194,7 @@ export interface TextSegment extends BaseSegment<'text', { text: string }> {}
 
 export interface AtSegment extends BaseSegment<'at', { qq: string | 'all' }> {}
 
-export interface ReplySegment extends BaseSegment<'reply', { id: string }> {}
+export interface ReplySegment extends BaseSegment<'reply', { id?: string; seq?: number }> {}
 
 export interface FaceSegment extends BaseSegment<'face', { id: string }> {}
 
@@ -199,6 +236,15 @@ export interface DiceSegment extends BaseSegment<'dice', any> {}
 export interface RPSSegment extends BaseSegment<'rps', any> {}
 
 export interface MarkdownSegment extends BaseSegment<'markdown', { content: string }> {}
+
+export interface XmlSegment extends BaseSegment<'xml', { data: string }> {}
+
+export interface LocationSegment extends BaseSegment<
+  'location',
+  { lat: string | number; lon: string | number; title?: string; content?: string }
+> {}
+
+export interface MiniAppSegment extends BaseSegment<'miniapp', { data: string }> {}
 
 export interface CloudMusicSegment extends BaseSegment<
   'music',
@@ -254,6 +300,9 @@ export type SendMessageSegment =
   | DiceSegment
   | RPSSegment
   | MarkdownSegment
+  | XmlSegment
+  | LocationSegment
+  | MiniAppSegment
   | MusicSegment
   | NodeSegment
   | ForwardSegment
@@ -415,6 +464,33 @@ export const Structs = {
    */
   markdown: function (content: string): MarkdownSegment {
     return { type: 'markdown', data: { content } }
+  },
+  /**
+   * 发送XML消息
+   * @param data XML数据
+   * @returns { type: 'xml', data: { data } }
+   */
+  xml: function (data: string): XmlSegment {
+    return { type: 'xml', data: { data } }
+  },
+  /**
+   * 发送位置消息
+   * @param lat 纬度
+   * @param lon 经度
+   * @param title 标题
+   * @param content 内容
+   * @returns { type: 'location', data: { lat, lon, title, content } }
+   */
+  location: function (lat: string | number, lon: string | number, title?: string, content?: string): LocationSegment {
+    return { type: 'location', data: { lat, lon, title, content } }
+  },
+  /**
+   * 发送小程序消息
+   * @param data 小程序数据
+   * @returns { type: 'miniapp', data: { data } }
+   */
+  miniapp: function (data: string): MiniAppSegment {
+    return { type: 'miniapp', data: { data } }
   },
   /**
    * 音乐分享

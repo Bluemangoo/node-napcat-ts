@@ -289,6 +289,10 @@ export class NCEventBus {
         return this.emit('notice.group_upload', json)
       case 'group_msg_emoji_like':
         return this.emit('notice.group_msg_emoji_like', json)
+      case 'online_file_receive':
+        return this.emit('notice.online_file_receive', json)
+      case 'online_file_send':
+        return this.emit('notice.online_file_send', json)
       default:
         logger.warn('[node-napcat-ts]', '[eventBus]', `unknown notice_type: ${notice_type}`)
         return false
@@ -383,6 +387,8 @@ export class NCEventBus {
         return this.notice_notify_poke(json)
       case 'profile_like':
         return this.emit('notice.notify.profile_like', json)
+      case 'gray_tip':
+        return this.emit('notice.notify.gray_tip', json)
       default:
         logger.warn('[node-napcat-ts]', '[eventBus]', `unknown notice_notify_type: ${sub_type}`)
         return false

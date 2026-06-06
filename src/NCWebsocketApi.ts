@@ -302,9 +302,9 @@ export class NCWebsocket extends NCWebsocketBase {
    * @onebot11
    * 重启
    */
-  // set_restart() {
-  //   return this.send('set_restart', {})
-  // }
+  set_restart(params?: WSSendParam['set_restart']) {
+    return this.send('set_restart', params ?? {})
+  }
 
   /**
    * @onebot11
@@ -1152,5 +1152,317 @@ export class NCWebsocket extends NCWebsocketBase {
    */
   del_group_album_media(params: WSSendParam['del_group_album_media']) {
     return this.send('del_group_album_media', params)
+  }
+
+  /**
+   * @napcat
+   * 清理流临时文件
+   */
+  clean_stream_temp_file() {
+    return this.send('clean_stream_temp_file', {})
+  }
+
+  /**
+   * @napcat
+   * 上传文件流
+   */
+  upload_file_stream(params: WSSendParam['upload_file_stream']) {
+    return this.send('upload_file_stream', params)
+  }
+
+  /**
+   * @napcat
+   * 下载文件流
+   */
+  download_file_stream(params: WSSendParam['download_file_stream']) {
+    return this.send('download_file_stream', params)
+  }
+
+  /**
+   * @napcat
+   * 下载语音流
+   */
+  download_file_record_stream(params: WSSendParam['download_file_record_stream']) {
+    return this.send('download_file_record_stream', params)
+  }
+
+  /**
+   * @napcat
+   * 下载图片流
+   */
+  download_file_image_stream(params: WSSendParam['download_file_image_stream']) {
+    return this.send('download_file_image_stream', params)
+  }
+
+  /**
+   * @napcat
+   * 创建闪传任务
+   */
+  create_flash_task(params: WSSendParam['create_flash_task']) {
+    return this.send('create_flash_task', params)
+  }
+
+  /**
+   * @napcat
+   * 发送闪传消息
+   */
+  send_flash_msg(params: WSSendParam['send_flash_msg']) {
+    return this.send('send_flash_msg', params)
+  }
+
+  /**
+   * @napcat
+   * 获取分享链接
+   */
+  get_share_link(params: WSSendParam['get_share_link']) {
+    return this.send('get_share_link', params)
+  }
+
+  /**
+   * @napcat
+   * 下载文件集
+   */
+  download_fileset(params: WSSendParam['download_fileset']) {
+    return this.send('download_fileset', params)
+  }
+
+  /**
+   * @napcat
+   * 获取文件集信息
+   */
+  get_fileset_info(params: WSSendParam['get_fileset_info']) {
+    return this.send('get_fileset_info', params)
+  }
+
+  /**
+   * @napcat
+   * 获取闪传文件列表
+   */
+  get_flash_file_list(params: WSSendParam['get_flash_file_list']) {
+    return this.send('get_flash_file_list', params)
+  }
+
+  /**
+   * @napcat
+   * 获取闪传文件URL
+   */
+  get_flash_file_url(params: WSSendParam['get_flash_file_url']) {
+    return this.send('get_flash_file_url', params)
+  }
+
+  /**
+   * @napcat
+   * 获取文件集ID
+   */
+  get_fileset_id(params: WSSendParam['get_fileset_id']) {
+    return this.send('get_fileset_id', params)
+  }
+
+  /**
+   * @napcat
+   * 发送在线文件
+   */
+  send_online_file(params: WSSendParam['send_online_file']) {
+    return this.send('send_online_file', params)
+  }
+
+  /**
+   * @napcat
+   * 发送在线文件夹
+   */
+  send_online_folder(params: WSSendParam['send_online_folder']) {
+    return this.send('send_online_folder', params)
+  }
+
+  /**
+   * @napcat
+   * 获取在线文件消息
+   */
+  get_online_file_msg(params: WSSendParam['get_online_file_msg']) {
+    return this.send('get_online_file_msg', params)
+  }
+
+  /**
+   * @napcat
+   * 接收在线文件
+   */
+  receive_online_file(params: WSSendParam['receive_online_file']) {
+    return this.send('receive_online_file', params)
+  }
+
+  /**
+   * @napcat
+   * 拒绝在线文件
+   */
+  refuse_online_file(params: WSSendParam['refuse_online_file']) {
+    return this.send('refuse_online_file', params)
+  }
+
+  /**
+   * @napcat
+   * 取消在线文件
+   */
+  cancel_online_file(params: WSSendParam['cancel_online_file']) {
+    return this.send('cancel_online_file', params)
+  }
+
+  /**
+   * @napcat
+   * 获取自定义表情详情
+   */
+  fetch_custom_face_detail(params?: WSSendParam['fetch_custom_face_detail']) {
+    return this.send('fetch_custom_face_detail', params ?? {})
+  }
+
+  /**
+   * @napcat
+   * 添加自定义表情
+   */
+  add_custom_face(params: WSSendParam['add_custom_face']) {
+    return this.send('add_custom_face', params)
+  }
+
+  /**
+   * @napcat
+   * 删除自定义表情
+   */
+  delete_custom_face(params: WSSendParam['delete_custom_face']) {
+    return this.send('delete_custom_face', params)
+  }
+
+  /**
+   * @napcat
+   * 设置自定义表情描述
+   */
+  set_custom_face_desc(params: WSSendParam['set_custom_face_desc']) {
+    return this.send('set_custom_face_desc', params)
+  }
+
+  /**
+   * @napcat
+   * 获取表情点赞列表
+   */
+  get_emoji_likes(params: WSSendParam['get_emoji_likes']) {
+    return this.send('get_emoji_likes', params)
+  }
+
+  /**
+   * @gocqhttp
+   * 设置型号展示
+   */
+  _set_model_show(params: WSSendParam['_set_model_show']) {
+    return this.send('_set_model_show', params)
+  }
+
+  /**
+   * @gocqhttp
+   * 获取在线客户端
+   */
+  get_online_clients() {
+    return this.send('get_online_clients', {})
+  }
+
+  /**
+   * @gocqhttp
+   * 检查链接安全性
+   */
+  check_url_safely(params: WSSendParam['check_url_safely']) {
+    return this.send('check_url_safely', params)
+  }
+
+  /**
+   * @gocqhttp
+   * 获取中文分词
+   */
+  '.get_word_slices'(params: WSSendParam['.get_word_slices']) {
+    return this.send('.get_word_slices', params)
+  }
+
+  /**
+   * @gocqhttp
+   * OCR图片
+   */
+  '.ocr_image'(params: WSSendParam['.ocr_image']) {
+    return this.send('.ocr_image', params)
+  }
+
+  /**
+   * @napcat
+   * 获取频道列表
+   */
+  get_guild_list() {
+    return this.send('get_guild_list', {})
+  }
+
+  /**
+   * @napcat
+   * 获取频道服务简介
+   */
+  get_guild_service_profile(params: WSSendParam['get_guild_service_profile']) {
+    return this.send('get_guild_service_profile', params)
+  }
+
+  /**
+   * @napcat
+   * 发送群ARK分享
+   */
+  send_group_ark_share(params: WSSendParam['send_group_ark_share']) {
+    return this.send('send_group_ark_share', params)
+  }
+
+  /**
+   * @napcat
+   * 发送ARK分享
+   */
+  send_ark_share(params: WSSendParam['send_ark_share']) {
+    return this.send('send_ark_share', params)
+  }
+
+  /**
+   * @napcat
+   * 获取语音转文字
+   */
+  fetch_ptt_text(params: WSSendParam['fetch_ptt_text']) {
+    return this.send('fetch_ptt_text', params)
+  }
+
+  /**
+   * @napcat
+   * 群签到(别名)
+   */
+  send_group_sign(params: WSSendParam['send_group_sign']) {
+    return this.send('send_group_sign', params)
+  }
+
+  /**
+   * @napcat
+   * 完成群待办
+   */
+  complete_group_todo(params: WSSendParam['complete_group_todo']) {
+    return this.send('complete_group_todo', params)
+  }
+
+  /**
+   * @napcat
+   * 取消群待办
+   */
+  cancel_group_todo(params: WSSendParam['cancel_group_todo']) {
+    return this.send('cancel_group_todo', params)
+  }
+
+  /**
+   * @napcat
+   * 取消群相册媒体点赞
+   */
+  cancel_group_album_media_like(params: WSSendParam['cancel_group_album_media_like']) {
+    return this.send('cancel_group_album_media_like', params)
+  }
+
+  /**
+   * @napcat
+   * 获取群签到列表
+   */
+  get_group_signed_list(params: WSSendParam['get_group_signed_list']) {
+    return this.send('get_group_signed_list', params)
   }
 }
